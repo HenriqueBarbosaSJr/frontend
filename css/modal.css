@@ -1,0 +1,32 @@
+
+#containerModal{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
+}
+
+.modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 400px;
+    width: 500px;
+    text-align: center;
+    padding: 10px;
+    background-color: aliceblue;
+    border-radius: 6px;
+    color: #000;
+}
+
+.containerDados{
+    margin-top: 5%;
+    margin-bottom: 60px;
+    margin-left:7%;
+    text-align: left;
+}

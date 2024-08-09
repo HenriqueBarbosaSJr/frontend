@@ -2,6 +2,9 @@
 
 const btnConsultar = document.getElementById('btnConsultar');
 const tbodyList = document.getElementById('tbodyList');
+const containerModal = document.getElementById('containerModal');
+const FecharModal = document.getElementById('FecharModal');
+const btnIncluir = document.getElementById('btnIncluir');
 
 
 
@@ -28,17 +31,32 @@ const api = axios.create({
                           '<td>' + dados[i].nome + '</td>' +
                           '<td>' + dados[i].descri + '</td>' +
                           '<td>' + dados[i].fabricante + '</td>' +
-                          '<td>' + dados[i].datahora + '</td>' +
+                          '<td>' + dados[i].datahora + '</td>' +       
+                          '<td id="controler">'+
+                                '<img src="../assets/edit.png" class="icons">'  + 
+                                '<img src="../assets/trash.png" class="icons">' +
+                                '<img src="../assets/edit2.png" class="icons">' + 
+                          '</td>' +
                       '</tr>';
             rows += tr;
         }
 
-        console.log('>>> '+tbodyList);
+        
         tbodyList.innerHTML = rows;
       
 
   } catch (error) {
     console.error('Erro ao consultar produtos:', error);
   }
+ }
 
+
+
+btnIncluir.onclick = ()=>{
+  containerModal.style.display = 'block';
 };
+
+
+FecharModal.onclick =()=>{
+  containerModal.style.display = 'none'; 
+}

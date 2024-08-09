@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/modal.css">
     <title>Produtos</title>
 </head>
 <body>
     <h1>Controle de Produtos</h1>
     
     <button id="btnConsultar">Consultar</button>
-    <button>Incluir</button>
+    <button id="btnIncluir">Incluir</button>
     <button>Alterar</button>
     <button>Excluir</button>
     <button><a href="../index.html">Voltar</a></button>
@@ -24,6 +25,7 @@
                     <th>Descrição</th>
                     <th>Fabricante</th>
                     <th>data e Hora</th>
+                    <th>Controle</th>
                 </tr>
             </thead>
             <tbody id="tbodyList"></tbody>
@@ -31,6 +33,21 @@
     </div>
 
 
+    <div id='containerModal'>
+        <div class='modal'>
+            <h2>Controle de Produtos</h2>
+            <div class='containerDados'>
+                <p>Código do produto:  <strong>9999</strong></p>
+                <p>Nome: <input type="text" value="" /> </p>
+                <p>Descrição: <input type="text" value="" /></p>
+                <p>Fabricante: <input type="text" value="" /></p>
+                <p>Data e Hora: <input type="text" value="" /></p>
+            </div>
+
+            <button id="FecharModal">Fechar</button>
+            
+        </div>
+    </div>
 
     <script src="../node_modules/axios/dist/axios.js"></script>
     <script src="../src/scriptProds.js"></script>

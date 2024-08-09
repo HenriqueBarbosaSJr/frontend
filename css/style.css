@@ -20,3 +20,14 @@
     background-color: #04AA6D;
     color: white;
   }
+
+  #controler {
+    text-align: center;
+  }
+
+  .icons {
+    height: 16px;
+    width: 16px;
+    margin-left: 2px;
+    margin-right: 2px;
+  }
