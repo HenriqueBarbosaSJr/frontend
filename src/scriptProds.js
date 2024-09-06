@@ -5,7 +5,14 @@ const tbodyList = document.getElementById('tbodyList');
 const containerModal = document.getElementById('containerModal');
 const FecharModal = document.getElementById('FecharModal');
 const btnIncluir = document.getElementById('btnIncluir');
+const CadModal = document.getElementById('CadModal');
 
+const inpNome = document.getElementById('inpNome');
+const inpDesc = document.getElementById('inpDesc');
+const inpQtda = document.getElementById('inpQtda');
+const inpFab = document.getElementById('inpFab');
+const inpPreco = document.getElementById('inpPreco');
+const inpCusto = document.getElementById('inpCusto');
 
 
 /// Lógica de programação 
@@ -50,6 +57,36 @@ const api = axios.create({
   }
  }
 
+async function create(){
+  try {
+    const nome = inpNome.value;
+    const desc = inpDesc.value;
+    const fab = inpFab.value;
+    const qtda = inpQtda.value;
+    const preco = inpPreco.value;
+    const custo = inpCusto.value;
+
+    data = {
+      'nome':nome,
+      'descri':desc,
+      'fabricante':fab,
+      'qtda':qtda,
+      'preco':preco,
+      'custo':custo
+    }
+    
+    const response = await api.post('produtos', data);
+    
+  } catch (error) {
+      console.log(`Error ao cadastrar produto. ${error}`);
+      
+
+      
+  }
+  
+}
+
+
 
 
 btnIncluir.onclick = ()=>{
@@ -59,4 +96,9 @@ btnIncluir.onclick = ()=>{
 
 FecharModal.onclick =()=>{
   containerModal.style.display = 'none'; 
-}
+};
+
+
+CadModal.onclick = ()=>{
+  create();
+};
