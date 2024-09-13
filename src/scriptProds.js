@@ -6,7 +6,9 @@ const containerModal = document.getElementById('containerModal');
 const FecharModal = document.getElementById('FecharModal');
 const btnIncluir = document.getElementById('btnIncluir');
 const CadModal = document.getElementById('CadModal');
+const delModal = document.getElementById('delModal');
 
+const inpCod = document.getElementById('inpCod');
 const inpNome = document.getElementById('inpNome');
 const inpDesc = document.getElementById('inpDesc');
 const inpQtda = document.getElementById('inpQtda');
@@ -34,7 +36,7 @@ const api = axios.create({
   
         for (let i = 0; i < dados.length; i++) {
             let tr = '<tr>' +
-                          '<td>' + dados[i].cod + '</td>' +
+                          '<td>' + dados[i].codpro + '</td>' +
                           '<td>' + dados[i].nome + '</td>' +
                           '<td>' + dados[i].descri + '</td>' +
                           '<td>' + dados[i].fabricante + '</td>' +
@@ -72,7 +74,9 @@ async function create(){
       'fabricante':fab,
       'qtda':qtda,
       'preco':preco,
-      'custo':custo
+      'custo':custo,
+      'calcular': ()=>{console.log('teste');
+      }
     }
     
     const response = await api.post('produtos', data);
@@ -86,7 +90,17 @@ async function create(){
   
 }
 
+async function deletePro(){
+  const cod = inpCod.value;
+  
+  const response = api.delete('produtos/'+cod);
+  
+}
 
+
+delModal.onclick = ()=>{
+  deletePro();
+}
 
 
 btnIncluir.onclick = ()=>{
