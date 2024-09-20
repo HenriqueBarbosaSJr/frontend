@@ -15,9 +15,13 @@ const inpQtda = document.getElementById('inpQtda');
 const inpFab = document.getElementById('inpFab');
 const inpPreco = document.getElementById('inpPreco');
 const inpCusto = document.getElementById('inpCusto');
+const inpData = document.getElementById('inpData');
 
 
-/// Lógica de programação 
+/// Lógica de programação
+
+let codDelete;
+
 
 const api = axios.create({
     baseURL:'http://localhost:3344/'
@@ -33,23 +37,28 @@ const api = axios.create({
    
 
         let rows = '';
-  
+
         for (let i = 0; i < dados.length; i++) {
+          let dataFormatada = new Date(dados[i].data)
+              .toLocaleDateString('pt-BR', { timeZone: 'UTC' });
             let tr = '<tr>' +
                           '<td>' + dados[i].codpro + '</td>' +
                           '<td>' + dados[i].nome + '</td>' +
                           '<td>' + dados[i].descri + '</td>' +
                           '<td>' + dados[i].fabricante + '</td>' +
-                          '<td>' + dados[i].datahora + '</td>' +       
+                          '<td>' + dados[i].custo + '</td>' +
+                          '<td>' + dados[i].preco + '</td>' +
+                          '<td>' + dados[i].qtda + '</td>' +
+                          '<td>' + dataFormatada + '</td>' +       
                           '<td id="controler">'+
                                 '<img src="../assets/edit.png" class="icons">'  + 
-                                '<img src="../assets/trash.png" class="icons">' +
+                                '<a id="btnTrash" onclick="deletePro(this)"><img src="../assets/trash.png" class="icons"></a>' +
                                 '<img src="../assets/edit2.png" class="icons">' + 
                           '</td>' +
                       '</tr>';
             rows += tr;
         }
-
+  
         
         tbodyList.innerHTML = rows;
       
@@ -90,16 +99,26 @@ async function create(){
   
 }
 
-async function deletePro(){
-  const cod = inpCod.value;
-  
-  const response = api.delete('produtos/'+cod);
-  
+async function deletePro(td){
+  let dateselection = td.parentElement.parentElement;
+  // console.log(dateselection);
+  // console.log(dateselection.cells[0].innerHTML);
+  containerModal.style.display = 'block';
+
+  inpCod.value = dateselection.cells[0].innerHTML;
+  inpNome.value = dateselection.cells[1].innerHTML;
+  inpDesc.value = dateselection.cells[2].innerHTML;
+  inpQtda.value = dateselection.cells[3].innerHTML;
+  inpFab.value = dateselection.cells[4].innerHTML;
+  inpPreco.value = dateselection.cells[5].innerHTML;
+  inpCusto.value = dateselection.cells[6].innerHTML;
+  inpData.value = dateselection.cells[7].innerHTML;  
+  codDelete = inpCod.value;
 }
 
 
 delModal.onclick = ()=>{
-  deletePro();
+  const response = api.delete('produtos/'+codDelete);
 }
 
 
