@@ -27,46 +27,44 @@ const api = axios.create({
     baseURL:'http://localhost:3344/'
 });
 
- btnConsultar.onclick = async ()=>{
+
+async function consultar(){
 
   try {
-        console.log('Consultando produtos.....');
-        const resp = await api.get('produtos');
-        const dados = resp.data;
-        console.log(resp.data);
-   
+    console.log('Consultando produtos.....');
+    const resp = await api.get('produtos');
+    const dados = resp.data;
+    console.log(resp.data);
 
-        let rows = '';
 
-        for (let i = 0; i < dados.length; i++) {
-          let dataFormatada = new Date(dados[i].data)
-              .toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-            let tr = '<tr>' +
-                          '<td>' + dados[i].codpro + '</td>' +
-                          '<td>' + dados[i].nome + '</td>' +
-                          '<td>' + dados[i].descri + '</td>' +
-                          '<td>' + dados[i].fabricante + '</td>' +
-                          '<td>' + dados[i].custo + '</td>' +
-                          '<td>' + dados[i].preco + '</td>' +
-                          '<td>' + dados[i].qtda + '</td>' +
-                          '<td>' + dataFormatada + '</td>' +       
-                          '<td id="controler">'+
-                                '<img src="../assets/edit.png" class="icons">'  + 
-                                '<a id="btnTrash" onclick="deletePro(this)"><img src="../assets/trash.png" class="icons"></a>' +
-                                '<img src="../assets/edit2.png" class="icons">' + 
-                          '</td>' +
-                      '</tr>';
-            rows += tr;
-        }
-  
-        
-        tbodyList.innerHTML = rows;
-      
+    let rows = '';
 
+    for (let i = 0; i < dados.length; i++) {
+      let dataFormatada = new Date(dados[i].data)
+          .toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        let tr = '<tr>' +
+                      '<td>' + dados[i].codpro + '</td>' +
+                      '<td>' + dados[i].nome + '</td>' +
+                      '<td>' + dados[i].descri + '</td>' +
+                      '<td>' + dados[i].fabricante + '</td>' +
+                      '<td>' + dados[i].custo + '</td>' +
+                      '<td>' + dados[i].preco + '</td>' +
+                      '<td>' + dados[i].qtda + '</td>' +
+                      '<td>' + dataFormatada + '</td>' +       
+                      '<td id="controler">'+
+                            '<img src="../assets/edit.png" class="icons">'  + 
+                            '<a id="btnTrash" onclick="deletePro(this)"><img src="../assets/trash.png" class="icons"></a>' +
+                            '<img src="../assets/edit2.png" class="icons">' + 
+                      '</td>' +
+                  '</tr>';
+        rows += tr;
+    }
+    tbodyList.innerHTML = rows;  
   } catch (error) {
-    console.error('Erro ao consultar produtos:', error);
-  }
- }
+  console.error('Erro ao consultar produtos:', error);
+  } 
+}
+
 
 async function create(){
   try {
@@ -92,11 +90,7 @@ async function create(){
     
   } catch (error) {
       console.log(`Error ao cadastrar produto. ${error}`);
-      
-
-      
   }
-  
 }
 
 async function deletePro(td){
@@ -117,20 +111,56 @@ async function deletePro(td){
 }
 
 
-delModal.onclick = ()=>{
-  const response = api.delete('produtos/'+codDelete);
+delModal.onclick = async ()=>{
+  try {
+    const response = await api.delete('produtos/'+codDelete);
+   if(response.status == 200){
+    Swal.fire({
+      icon: "success",
+      title: 'Registro deletado com sucesso!',
+    });
+    containerModal.style.display = 'none'; 
+    consultar();
+
+   };
+    
+    
+  } catch (error) {
+    if (error.response) {
+      // Verifica se o status é 409 (Conflict)
+      if (error.response.status === 409) {
+        Swal.fire({
+          icon: "error",
+          title: error.response.data.msg,
+        });
+        containerModal.style.display = 'none'; 
+      } else {
+        alert('Erro ao deletar o produto. Tente novamente.');
+      }
+    } else {
+      // Tratamento para erros de conexão ou outros problemas
+      console.error('Erro na requisição:', error);
+      alert('Erro de conexão com o servidor.');      
+    }
+  }
 }
 
+
+/*********************************************************************/
+//   Botões                                                           /
+/*********************************************************************/
+
+btnConsultar.onclick = async ()=>{
+  consultar()
+}
 
 btnIncluir.onclick = ()=>{
   containerModal.style.display = 'block';
 };
 
-
 FecharModal.onclick =()=>{
   containerModal.style.display = 'none'; 
 };
-
 
 CadModal.onclick = ()=>{
   create();
