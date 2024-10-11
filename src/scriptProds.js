@@ -7,6 +7,7 @@ const FecharModal = document.getElementById('FecharModal');
 const btnIncluir = document.getElementById('btnIncluir');
 const CadModal = document.getElementById('CadModal');
 const delModal = document.getElementById('delModal');
+const altModal = document.getElementById('altModal');
 
 const inpCod = document.getElementById('inpCod');
 const inpNome = document.getElementById('inpNome');
@@ -21,11 +22,26 @@ const inpData = document.getElementById('inpData');
 /// Lógica de programação
 
 let codDelete;
+let codAltera;
 
 
 const api = axios.create({
     baseURL:'http://localhost:3344/'
 });
+
+
+function limparCampos(){
+  inpCod.value = '';
+  inpNome.value = '';
+  inpDesc.value = '';
+  inpFab.value = '';
+  inpCusto.value = '';
+  inpPreco.value = '';
+  inpQtda.value = '';
+  inpData.value = '';
+
+}
+
 
 
 async function consultar(){
@@ -52,7 +68,7 @@ async function consultar(){
                       '<td>' + dados[i].qtda + '</td>' +
                       '<td>' + dataFormatada + '</td>' +       
                       '<td id="controler">'+
-                            '<img src="../assets/edit.png" class="icons">'  + 
+                            '<a id="btnTrash" onclick="exibeUpdatePro(this)"><img src="../assets/edit.png" class="icons"></a>'  + 
                             '<a id="btnTrash" onclick="deletePro(this)"><img src="../assets/trash.png" class="icons"></a>' +
                             '<img src="../assets/edit2.png" class="icons">' + 
                       '</td>' +
@@ -81,9 +97,7 @@ async function create(){
       'fabricante':fab,
       'qtda':qtda,
       'preco':preco,
-      'custo':custo,
-      'calcular': ()=>{console.log('teste');
-      }
+      'custo':custo
     }
     
     const response = await api.post('produtos', data);
@@ -99,16 +113,96 @@ async function deletePro(td){
   // console.log(dateselection.cells[0].innerHTML);
   containerModal.style.display = 'block';
 
+  inpCod.disabled = true;
+  inpData.disabled = true;
+  inpNome.disabled = true;
+  inpDesc.disabled = true;
+  inpFab.disabled = true;
+  inpQtda.disabled = true;
+  inpPreco.disabled = true;
+  inpCusto.disabled = true;
+
+  delModal.disabled = false;
+  CadModal.disabled = true;
+  altModal.disabled = true;
+
+  
   inpCod.value = dateselection.cells[0].innerHTML;
   inpNome.value = dateselection.cells[1].innerHTML;
   inpDesc.value = dateselection.cells[2].innerHTML;
-  inpQtda.value = dateselection.cells[3].innerHTML;
-  inpFab.value = dateselection.cells[4].innerHTML;
+  inpFab.value = dateselection.cells[3].innerHTML;
+  inpCusto.value = dateselection.cells[4].innerHTML;
   inpPreco.value = dateselection.cells[5].innerHTML;
-  inpCusto.value = dateselection.cells[6].innerHTML;
+  inpQtda.value = dateselection.cells[6].innerHTML;
   inpData.value = dateselection.cells[7].innerHTML;  
   codDelete = inpCod.value;
 }
+
+async function exibeUpdatePro(td){
+  let dateselection = td.parentElement.parentElement;
+  containerModal.style.display = 'block';
+  inpCod.disabled = true;
+  inpData.disabled = true;
+  inpNome.disabled = false;
+  inpDesc.disabled = false;
+  inpFab.disabled = false;
+  inpQtda.disabled = false;
+  inpPreco.disabled = false;
+  inpCusto.disabled = false;
+
+  delModal.disabled = true;
+  CadModal.disabled = true;
+  altModal.disabled = false;
+
+  inpCod.value = dateselection.cells[0].innerHTML;
+  inpNome.value = dateselection.cells[1].innerHTML;
+  inpDesc.value = dateselection.cells[2].innerHTML;
+  inpFab.value = dateselection.cells[3].innerHTML;
+  inpCusto.value = dateselection.cells[4].innerHTML;
+  inpPreco.value = dateselection.cells[5].innerHTML;
+  inpQtda.value = dateselection.cells[6].innerHTML;
+  inpData.value = dateselection.cells[7].innerHTML; 
+
+  codAltera = inpCod.value;
+}
+
+
+async function updatePro(){
+  try {
+    const nome = inpNome.value;
+    const desc = inpDesc.value;
+    const fab = inpFab.value;
+    const qtda = inpQtda.value;
+    const preco = inpPreco.value;
+    const custo = inpCusto.value;
+
+    data = {
+      'nome':nome,
+      'descri':desc,
+      'fabricante':fab,
+      'qtda':qtda,
+      'preco':preco,
+      'custo':custo
+    }
+    
+    const response = await api.put(`produtos/${codAltera}`, data);
+    console.log(response);
+    
+    if(response.status == 201){
+      Swal.fire({
+        icon: "success",
+        title: 'Registro alterado com sucesso!',
+      });
+    }
+    containerModal.style.display = 'none';
+    consultar();
+    
+  } catch (error) {
+      console.log(`Error ao alterar o produto. ${error}`);
+  }
+}
+
+
 
 
 delModal.onclick = async ()=>{
@@ -149,6 +243,7 @@ delModal.onclick = async ()=>{
 /*********************************************************************/
 //   Botões                                                           /
 /*********************************************************************/
+consultar();
 
 btnConsultar.onclick = async ()=>{
   consultar()
@@ -156,6 +251,21 @@ btnConsultar.onclick = async ()=>{
 
 btnIncluir.onclick = ()=>{
   containerModal.style.display = 'block';
+  limparCampos();
+  inpNome.focus();
+  inpCod.disabled = true;
+  inpData.disabled = true;
+  inpNome.disabled = false;
+  inpDesc.disabled = false;
+  inpFab.disabled = false;
+  inpQtda.disabled = false;
+  inpPreco.disabled = false;
+  inpCusto.disabled = false;
+
+  delModal.disabled = true;
+  CadModal.disabled = false;
+  altModal.disabled = true;
+  
 };
 
 FecharModal.onclick =()=>{
@@ -165,3 +275,7 @@ FecharModal.onclick =()=>{
 CadModal.onclick = ()=>{
   create();
 };
+
+altModal.onclick = ()=>{
+  updatePro();
+}
